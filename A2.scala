@@ -56,6 +56,7 @@ Urows.collect().foreach(println)
 V.toString()*/
 
 val A = U.multiply(s).multiply(V.transpose).rows.collect
+println(A.deep.mkString("\n"))
 //val A = UV_Matrix.multiply(s)
 
 /*
