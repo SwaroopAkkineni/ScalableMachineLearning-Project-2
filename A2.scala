@@ -1,16 +1,11 @@
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-import org.apache.spark.rdd._
-//import org.bdgenomics.adam.rdd.ADAMContext._
-//import collection.JavaConverters._
 import scala.io.Source
-import scala.util.Random
-import org.apache.spark.mllib.linalg.distributed.RowMatrix
-import org.apache.spark.mllib._
-import org.apache.spark.mllib.linalg.{Vector, Vectors}
-import org.apache.spark.mllib.classification.LogisticRegressionWithSGD
-import Array._
+import org.apache.spark.rdd._
+import org.apache.spark.mllib.linalg._
+import org.apache.spark.mllib.linalg.distributed._
+import java.io._
 
 
 
@@ -43,16 +38,26 @@ for( i <- 0 to maxRow - 1){
 
 val rddVectors = sc.parallelize(vectorArray)//rdd.SparkContext.parallelize( vectorArray)
 val rowMatrix = new RowMatrix(rddVectors)
-val svd = rowMatrix.computeSVD(22, true)//23, false , 10)
+val svd = rowMatrix.computeSVD(24, true)//23, false , 10)
 
-val U: RowMatrix = svd.U  // The U factor is a RowMatrix.
-val s: Vector = svd.s  // The singular values are stored in a local dense vector.
-//val V: Matrix = svd.V
+//val U: RowMatrix = svd.U  // The U factor is a RowMatrix.
+//val s: Vector = svd.s  // The singular values are stored in a local dense vector.
+//val s = Matrices.diag(svd.s)
+val U = svd.U
+val s = Matrices.diag(svd.s)
+val V = svd.V//val s_RDD = sc.parallelize(Seq(s))
+//val s_Matrix : RowMatrix = new RowMatrix(s_RDD)
+//val Vs_Matrix = V.multiply(s)
 
-s.toString
+
+/*s.toString
 val Urows = U.rows
 Urows.collect().foreach(println)
-//V.rows.collect().foreach(println)
+V.toString()*/
+
+val A = U.multiply(s).multiply(V.transpose).rows.collect
+//val A = UV_Matrix.multiply(s)
+
 /*
 fileData.foreach{ x =>
   //| println(matrix(x(0).toInt)(x(1).toInt))// = x(2).toDouble
@@ -71,7 +76,6 @@ println(" ------------------------------------  2: Implementation --------------
 /*
 val maxRow = fileData.map( x => x(0).toInt).max() + 1
 val maxCol = fileData.map( x => x(1).toInt).max() + 1
-
 val array = Array.ofDim[Double](maxRow,maxCol)
 fileData.foreach( x => array(x(0).toInt )(x(1).toInt ) = x(2).toDouble  )
 */
@@ -81,10 +85,7 @@ fileData.foreach( x => array(x(0).toInt )(x(1).toInt ) = x(2).toDouble  )
 val r_vector = r.map(_.toString).to[Vector]
 val row = fileData.map( x => x.to[Vector] )
 val mat : RowMatrix = new RowMatrix(row)
-
 //val row = fileData.map( x => Vectors.dense( x(0), x(1), x(2) ) )
-
-
   Step 1) Implement SGD
   Step 2) ......
   Step 3) Profit
