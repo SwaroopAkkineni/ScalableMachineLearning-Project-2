@@ -17,10 +17,16 @@ println("Hello World!!!!")
 println(" ------------------------------------ 1: Data Setup --------------------------------------------------- ")
 
 val fileData = sc.textFile("small.csv").map(_.split(","))//returns an array(String) of each line in file
-val missingFileDAta = sc.textFile("small_missing.csv").map(_.split(",")).first()//returns an array(string) of each line in missing file
+val missingFileDAta = sc.textFile("small_missing.csv").map(_.split(","))//.first()//returns an array(string) of each line in missing file
+val outfile = "small.out"
+val ofile = new File(outfile)
+val output = new BufferedWriter(new FileWriter(ofile))
   /*fileData        = (row, column, value)
     missingFileDAta = (row, column)
   */
+val missingrowValues : Array[Int]  = missingFileDAta.map( x => x(0).toInt).collect
+val missingcolValues : Array[Int]  = missingFileDAta.map( x => x(1).toInt).collect
+
 val maxRow = fileData.map( x => x(0).toInt).max
 val maxCol = fileData.map( x => x(1).toInt).max
 var matrix = Array.ofDim[Double](maxRow + 1,maxCol + 1)
@@ -55,20 +61,33 @@ val Urows = U.rows
 Urows.collect().foreach(println)
 V.toString()*/
 
-val A = U.multiply(s).multiply(V.transpose).rows.collect
-println(A.deep.mkString("\n"))
+val A = U.multiply(s).multiply(V.transpose).rows.collect.zipWithIndex
+//println(A.deep.mkString("\n"))
+
+
 //val A = UV_Matrix.multiply(s)
+//println(A(0)._1.toArray(0))
 
-/*
-fileData.foreach{ x =>
-  //| println(matrix(x(0).toInt)(x(1).toInt))// = x(2).toDouble
-  | matrix(x(0).toInt)(x(1).toInt) = x(2).toDouble
-  //| matrix(x(0).toInt)(x(1).toInt) = x(1).toDouble
-  //matrix(x(0))(x(1)) = x(2)
-  | }
-*/
+/*A.foreach(a => {
+  val vector = a._1
+  val rowNum = a._2
+  for(i <- 0 until maxCol) {
+          output.write(vector(i)+"\n")
+  }
+})*/
+
+
 println(" ------------------------------------  2: Implementation ---------------------------------------------------- ")
-
+for( i <- 0 to missingrowValues.length - 1){
+  //matrix(rowValues(i))(colValues(i)) = fileValues(i)
+  val vector = A(missingrowValues(i))._1.toArray
+  val missRow = missingrowValues(i)
+  val missCol = missingcolValues(i)
+  val writeVal = vector(missingcolValues(i))
+  //println( missRow+","+missCol+","+writeVal)
+  output.write( missRow+","+missCol+","+writeVal+"\n")
+}
+output.close()
 //val file_VectorFormat : = fileData.map( x => Vectors.dense(x(0).toDouble, x(1).toDouble, x(2).toDouble) )
 //val file_MatrixFormat : RowMatrix = new RowMatrix(null, file_VectorFormat.collect().length , file_VectorFormat.collect().length)
 
