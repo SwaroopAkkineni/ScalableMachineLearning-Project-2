@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Mon Nov 07 22:42:56 EST 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0158-4208-17ed-00000e0364d8 
+on database directory /Users/swaroopakkineni/Desktop/Fall-Semester-2016/Scalable ML/Projects/project2/metastore_db with class loader sun.misc.Launcher$AppClassLoader@1c6b6478 
+Loaded from file:/usr/local/Cellar/hive/2.1.0/libexec/lib/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_65-b17
+user.dir=/Users/swaroopakkineni/Desktop/Fall-Semester-2016/Scalable ML/Projects/project2
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.11.6
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
