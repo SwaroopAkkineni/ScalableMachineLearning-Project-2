@@ -6,6 +6,8 @@ import org.apache.spark.rdd._
 import org.apache.spark.mllib.linalg._
 import org.apache.spark.mllib.linalg.distributed._
 import java.io._
+import scala.util.Random
+
 
 ////////////////////////////////////////////  Matrix Transpose ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 def transposeRowMatrix(m: RowMatrix): RowMatrix = {
@@ -32,6 +34,21 @@ def transposeRowMatrix(m: RowMatrix): RowMatrix = {
  }
 ////////////////////////////////////////////  Matrix Transpose ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////  Matrix Factorization ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+def createRandomMatrix(row : Int, col : Int) = {
+  val rand = new scala.util.Random(10)
+  val doubleArray = (for (i <- 1 to col) yield rand.nextInt(100)).toArray
+  val vector : Vector = new DenseVector( doubleArray.map(x => x.toDouble) )
+  val array = new Array[Vector](row)
+  for(i <- 0 to row - 1){
+    val doubleArray = (for (i <- 1 to col) yield rand.nextInt(100)).toArray
+    val vvv : Vector = new DenseVector( doubleArray.map(x => x.toDouble) )
+    array(i) = vvv
+  }
+  val arrayVectors = sc.parallelize(vectorArray)
+  val rowMatrix = new RowMatrix(rddVectors)
+  rowMatrix
+  //val newRDD = new Rdd()//.map( x =>
+}
 def matrix_factorization(r_matrix: RowMatrix, p_Vector: RowMatrix, q_Vector: RowMatrix, k: Int, steps: Double, alpha: Double, beta: Double) = {
   var q_t = transposeRowMatrix(q)
 /*
@@ -48,10 +65,18 @@ Find :
 //return P, Q.T
 }
 
+def dotProduct(p_rom: RowMatrix, q_rom: RowMatrix) = {
+  val temp = q_rom.rows.map( x => x.toArray).collect()
+  val tempRows = temp.size
+  val tempCols = temp(1).size
+  val dm: Matrix = Matrices.dense(tempRows, tempCols, temp.flatten)
+  val dot = p_rom.multiply(dm)
 
+  dot
+}
 def PQ_calculator(p_Vector: RowMatrix, q_Vector: RowMatrix, k: Int, alpha: Double, beta: Double, eij: Double, i: Int, j: Int) = {
- var p = rowMatrix.rows.map( x => x.toArray).collect()//rowMatrix.rows.toArray().collect()
- var q = rowMatrix.rows.map( x => x.toArray).collect()
+ var p = p_Vector.rows.map( x => x.toArray).collect()//rowMatrix.rows.toArray().collect()
+ var q = q_Vector.rows.map( x => x.toArray).collect()
 
  for(kVal <- 0 to k){
    p(i)(kVal) = p(i)(kVal) + (alpha * (2 * eij * q(kVal)(j) - beta * p(i)(kVal) ))
@@ -99,17 +124,17 @@ val rddVectors = sc.parallelize(vectorArray)//rdd.SparkContext.parallelize( vect
 val rowMatrix = new RowMatrix(rddVectors)
 println(" ------------------------------------ 2: Implementaion --------------------------------------------------- ")
 /*
-  U set of Users
-  D set of Items
+  U(N) set of Users
+  D(M) set of Items
   R = [U * D] contains all the ratings of users ****
 
 Find :
-  P = [U * K]
-  Q = [D * K]
+  P = [U(N) * K]
+  Q = [D(KM * K]
 
   Such that R ~ P * transpose(Q) = R^
 */
-var q = rowMatrix
+//var q = rowMatrix
 //var q_t = transposeRowMatrix(q)
 
 val steps = 5000
@@ -119,46 +144,10 @@ val N = maxRow
 val M = maxCol
 val K = 2 // ??????????????????????????????????????
 
+val p = createRandomMatrix(N, K)
+val q = createRandomMatrix(M,K)
 //def PQ_calculator(p_Vector: RowMatrix, q_Vector: RowMatrix, k: Int, alpha: Double, beta: Double, eij: Double, i: Int, j: Int) = {
-def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.0002, beta=0.02) =
-
-
-/*
-  an array can be made into a DenseVector
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.0002, beta=0.02) =
 
 
 

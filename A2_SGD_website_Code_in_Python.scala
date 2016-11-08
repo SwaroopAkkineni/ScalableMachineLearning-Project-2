@@ -12,8 +12,8 @@ N = len(R)
 M = len(R[0])
 K = 2
 
-P = numpy.random.rand(N,K)
-Q = numpy.random.rand(M,K)
+P = numpy.random.rand(N,K)                                                    // Finished
+Q = numpy.random.rand(M,K)                                                    // Finished
 
 nP, nQ = matrix_factorization(R, P, Q, K)
 nR = numpy.dot(nP, nQ.T)
@@ -33,7 +33,7 @@ def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.0002, beta=0.02) =
           }
         }
       }
-      eR = numpy.dot(P,Q)
+      eR = numpy.dot(P,Q)                                                     // Finished
       e = 0
       for i in xrange(len(R)):{
         for j in xrange(len(R[i])):{
