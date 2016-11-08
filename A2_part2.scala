@@ -74,6 +74,10 @@ def dotProduct(p_rom: RowMatrix, q_rom: RowMatrix) = {
 
   dot
 }
+
+def e_pow(e: Double, r_matrix: RowMatrix, p_Vector: RowMatrix, q_Vector:) = {
+  
+}
 def PQ_calculator(p_Vector: RowMatrix, q_Vector: RowMatrix, k: Int, alpha: Double, beta: Double, eij: Double, i: Int, j: Int) = {
  var p = p_Vector.rows.map( x => x.toArray).collect()//rowMatrix.rows.toArray().collect()
  var q = q_Vector.rows.map( x => x.toArray).collect()
