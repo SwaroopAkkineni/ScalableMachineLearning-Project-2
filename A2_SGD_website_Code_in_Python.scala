@@ -12,7 +12,7 @@ N = len(R)
 M = len(R[0])
 K = 2
 
-P = numpy.random.rand(N,K)                                                    // Finished
+P = numpy.random.rand(N,K)
 Q = numpy.random.rand(M,K)                                                    // Finished
 
 nP, nQ = matrix_factorization(R, P, Q, K)

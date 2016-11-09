@@ -18,8 +18,6 @@ def transposeRowMatrix(m: RowMatrix): RowMatrix = {
      .map(buildRow) // restore order of elements in each row and remove column indexes
    new RowMatrix(transposedRowsRDD)
  }
-
-
  def rowToTransposedTriplet(row: Vector, rowIndex: Long): Array[(Long, (Long, Double))] = {
    val indexedRow = row.toArray.zipWithIndex
    indexedRow.map{case (value, colIndex) => (colIndex.toLong, (rowIndex, value))}
@@ -51,33 +49,30 @@ def createRandomMatrix(row : Int, col : Int) = {
 }
 def matrix_factorization(r_matrix: RowMatrix, p_Vector: RowMatrix, q_Vector: RowMatrix, k: Int, steps: Double, alpha: Double, beta: Double) = {
   var q_t = transposeRowMatrix(q)
-/*
-  U set of Users
-  D set of Items
-  R = [U * D] contains all the ratings of users ****
+  val e : Double = 0
 
-Find :
-  P = [U * K]
-  Q = [D * K]
-
-  Such that R ~ P * transpose(Q) = R^
-*/
-//return P, Q.T
+  if(e < 0.001){
+    val q_transpose = transposeRowMatrix(q)
+    break
+    //return (e, q_transpose)
+  }
+  return (0,0)
 }
-
+def pow2( theValue: Double) = {
+  val power2 = theValue * theValue
+  power2
+}
 def dotProduct(p_rom: RowMatrix, q_rom: RowMatrix) = {
   val temp = q_rom.rows.map( x => x.toArray).collect()
   val tempRows = temp.size
   val tempCols = temp(1).size
   val dm: Matrix = Matrices.dense(tempRows, tempCols, temp.flatten)
   val dot = p_rom.multiply(dm)
-
   dot
 }
+//def e_pow(e: Double, r_matrix: RowMatrix, p_Vector: RowMatrix, q_Vector:) = {
 
-def e_pow(e: Double, r_matrix: RowMatrix, p_Vector: RowMatrix, q_Vector:) = {
-  
-}
+//}
 def PQ_calculator(p_Vector: RowMatrix, q_Vector: RowMatrix, k: Int, alpha: Double, beta: Double, eij: Double, i: Int, j: Int) = {
  var p = p_Vector.rows.map( x => x.toArray).collect()//rowMatrix.rows.toArray().collect()
  var q = q_Vector.rows.map( x => x.toArray).collect()
@@ -150,6 +145,8 @@ val K = 2 // ??????????????????????????????????????
 
 val p = createRandomMatrix(N, K)
 val q = createRandomMatrix(M,K)
+//def matrix_factorization(r_matrix: RowMatrix, p_Vector: RowMatrix, q_Vector: RowMatrix, k: Int, steps: Double, alpha: Double, beta: Double) = {
+
 //def PQ_calculator(p_Vector: RowMatrix, q_Vector: RowMatrix, k: Int, alpha: Double, beta: Double, eij: Double, i: Int, j: Int) = {
 //def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.0002, beta=0.02) =
 
