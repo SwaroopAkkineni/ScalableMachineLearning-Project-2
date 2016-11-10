@@ -42,9 +42,19 @@ object Assign2 {
         val maxRow = fileData.map( x => x(0).toInt).max
         val maxCol = fileData.map( x => x(1).toInt).max
         var matrix = Array.ofDim[Double](maxRow + 1,maxCol + 1)
+
+
         val rowValues : Array[Int]  = fileData.map( x => x(0).toInt).collect
         val colValues : Array[Int]  = fileData.map( x => x(1).toInt).collect
         val fileValues : Array[Double] = fileData.map(x => x(2).toDouble).collect
+
+        var avg = fileValues.reduceLeft(_ + _) / (fileValues.size)
+        for( i <- 0 to maxRow){
+          for(j <- 0 to maxCol){
+            matrix(i)(j) = avg
+          }
+        }
+
         for( i <- 0 to rowValues.length - 1){
           matrix(rowValues(i))(colValues(i)) = fileValues(i)
         }

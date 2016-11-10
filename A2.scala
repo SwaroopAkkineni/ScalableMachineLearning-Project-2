@@ -27,16 +27,28 @@ val output = new BufferedWriter(new FileWriter(ofile))
 val missingrowValues : Array[Int]  = missingFileDAta.map( x => x(0).toInt).collect
 val missingcolValues : Array[Int]  = missingFileDAta.map( x => x(1).toInt).collect
 
+
 val maxRow = fileData.map( x => x(0).toInt).max
 val maxCol = fileData.map( x => x(1).toInt).max
 var matrix = Array.ofDim[Double](maxRow + 1,maxCol + 1)
+
+
+
 val rowValues : Array[Int]  = fileData.map( x => x(0).toInt).collect
 val colValues : Array[Int]  = fileData.map( x => x(1).toInt).collect
 val fileValues : Array[Double] = fileData.map(x => x(2).toDouble).collect
+
+val avg : Double = fileValues.reduceLeft(_ + _)//fileValues.size
+for( i <- 0 to maxRow){
+  for(j <- 0 to maxCol){
+    matrix(i)(j) = avg
+  }
+}
+
 for( i <- 0 to rowValues.length - 1){
   matrix(rowValues(i))(colValues(i)) = fileValues(i)
 }
-
+//java.util.Arrays.fill(vectorArray, 0, vectorArray.size() - 1, sum)
 var vectorArray = new Array[Vector](maxRow)
 for( i <- 0 to maxRow - 1){
   vectorArray(i) =  Vectors.dense(matrix(i))
